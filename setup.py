@@ -10,5 +10,5 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url='https://github.com/Tripper98/SUM_FUNCTION',
     packages=['src\sumtripper'],
-    install_requires=['requests'],
+    install_requires=['h5py', 'typing-extensions', 'wheel'],
 )
