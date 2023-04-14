@@ -29,7 +29,7 @@ jobs:
         run: python setup.py sdist bdist_wheel
 
       - name: Update release
-        uses: actions/github-script@v5
+        uses: actions/github-script@v4
         with:
           script: |
             const { Octokit } = require("@octokit/rest");
