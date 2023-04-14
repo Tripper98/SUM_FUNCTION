@@ -1,11 +1,11 @@
 name: Update Release
 
-on:
-  push:
-    tags:
-      - 'v*'
-    branches:
-      - main
+# on:
+#   push:
+#     tags:
+#       - 'v*'
+#     branches:
+#       - main
 
 jobs:
   update-release:
@@ -68,4 +68,4 @@ jobs:
               console.log("Release created:", newRelease.data.html_url);
             }
           env:
-            token: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
