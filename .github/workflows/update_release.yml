@@ -1,0 +1,64 @@
+name: Update Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  update-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Build distribution package
+        run: python setup.py sdist bdist_wheel
+
+      - name: Update release
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const { Octokit } = require("@octokit/rest");
+            const { createOrUpdateRelease } = require("@actions/github");
+
+            const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+            const release = await octokit.repos.getReleaseByTag({
+              ...context.repo,
+              tag: context.ref,
+            });
+
+            if (release) {
+              const updatedRelease = await createOrUpdateRelease({
+                ...context.repo,
+                release_id: release.data.id,
+                draft: false,
+                tag_name: release.data.tag_name,
+                name: "Updated release",
+                body: "This is an updated release",
+                assets: ["./dist/**"],
+              });
+              console.log("Release updated:", updatedRelease.data.html_url);
+            } else {
+              const newRelease = await createOrUpdateRelease({
+                ...context.repo,
+                tag_name: context.ref,
+                name: "New release",
+                body: "This is a new release",
+                assets: ["./dist/**"],
+              });
+              console.log("Release created:", newRelease.data.html_url);
+            }
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
