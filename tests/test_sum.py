@@ -1,4 +1,4 @@
-from sumtripper import ad_sum
+from sumtripper.ad_sum import ad_sum
 
 
 def test_ad_sum():
