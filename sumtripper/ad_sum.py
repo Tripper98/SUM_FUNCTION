@@ -5,4 +5,4 @@ def sum_list(*numbers):
     res = 0 
     for el in numbers:
         res += el
-    return el
+    return res
